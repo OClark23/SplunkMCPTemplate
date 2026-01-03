@@ -1,0 +1,43 @@
+# Copy to config.yaml and fill in values for your environment.
+# Do NOT commit secrets. Keep tokens in env vars where possible.
+
+splunk:
+  host: "https://your-splunk-host:8089"          # TODO: set Splunk management/REST URL
+  token: "${SPLUNK_TOKEN_PLACEHOLDER}"           # TODO: replace or set SPLUNK_TOKEN env
+  username: "${SPLUNK_USERNAME_PLACEHOLDER}"     # Optional if not using token
+  password: "${SPLUNK_PASSWORD_PLACEHOLDER}"     # Optional if not using token
+  verify_ssl: true
+
+search:
+  name: "Error spike last hour"
+  spl: "search index=main error | stats count by host"
+  earliest: "-60m"
+  latest: "now"
+
+threshold:
+  count: 100           # trigger when count >= this value
+  window_minutes: 60   # analysis window size
+  group_by: ["host"]   # fields to group/aggregate on
+
+reporting:
+  include_top_fields: ["host"]
+  max_top_values: 5
+
+jira:
+  enabled: false
+  base_url: "https://your-domain.atlassian.net"   # TODO: set Jira site URL
+  project_key: "ABC"                              # TODO: set target project key
+  user_email: "you@example.com"                   # TODO: Jira user email
+  api_token: "${JIRA_API_TOKEN_PLACEHOLDER}"      # TODO: set env or inline token
+  issue_type: "Task"
+  summary_template: "Splunk alert: {{search_name}}"
+  labels: ["splunk", "auto"]
+
+teams:
+  enabled: false
+  webhook_url: "https://outlook.office.com/webhook/..."  # TODO: set Teams webhook
+
+run:
+  log_level: "INFO"
+  output_path: ""       # optional file path to save report
+
